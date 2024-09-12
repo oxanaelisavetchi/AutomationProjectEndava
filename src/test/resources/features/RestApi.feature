@@ -7,7 +7,7 @@ Feature: Rest Api Tests
   @GetRequests
   Scenario Outline: Check the get rest api functionality
     When run request <url>
-    When get status code <status>, <message>
+    And get status code <status>, <message>
     Then get response <data>, <value>, <message>
 
     Examples:
