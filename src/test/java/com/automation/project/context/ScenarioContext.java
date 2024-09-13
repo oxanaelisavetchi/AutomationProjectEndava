@@ -1,11 +1,7 @@
 package com.automation.project.context;
 
 import com.automation.project.pages.BasePage;
-//import lombok.Getter;
-//import lombok.Setter;
-//
-//@Getter
-//@Setter
+
 public class ScenarioContext {
 
     private static ScenarioContext INSTANCE;

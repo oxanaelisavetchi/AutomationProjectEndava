@@ -7,7 +7,7 @@ Feature: Rest Api Tests
   @GetRequests
   Scenario Outline: Check the get rest api functionality
     When run request <url>
-    And get status code <status>, <message>
+    When get status code <status>, <message>
     Then get response <data>, <value>, <message>
 
     Examples:
@@ -28,7 +28,7 @@ Feature: Rest Api Tests
 
     Examples:
       | url                              | status | message                | data             | value                           | response            |
-      | "https://reqres.in/api/users"    | 201    | "User created "        | "name,job"       | "morpheus,leader"               | ""                  |
+      | "/users"    | 201    | "User created "        | "name,job"       | "morpheus,leader"               | ""                  |
       | "https://reqres.in/api/register" | 200    | "User registered "     | "email,password" | "eve.holt@reqres.in,pistol"     | "QpwL5tke4Pnpja7X4" |
       | "https://reqres.in/api/register" | 400    | "User not registered " | "email"          | "sydney@fife"                   | ""                  |
       | "https://reqres.in/api/login"    | 200    | "User logged "         | "email,password" | "eve.holt@reqres.in,cityslicka" | "QpwL5tke4Pnpja7X4" |
@@ -57,7 +57,7 @@ Feature: Rest Api Tests
 
 
   @DeleteRequests
-  Scenario Outline: testing delete requests
+  Scenario Outline: Check the delete rest api functionality
     When delete functionality <url>
     When status code <status>, <message>
 

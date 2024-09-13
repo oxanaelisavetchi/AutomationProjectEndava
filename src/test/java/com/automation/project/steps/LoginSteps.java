@@ -3,7 +3,6 @@ package com.automation.project.steps;
 import com.automation.project.actions.LoginActions;
 import com.automation.project.asserts.CustomAssert;
 import com.automation.project.context.ScenarioContext;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 

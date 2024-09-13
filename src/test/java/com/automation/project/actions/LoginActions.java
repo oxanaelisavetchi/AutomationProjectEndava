@@ -6,6 +6,9 @@ import com.automation.project.drivers.DriverFactory;
 import com.automation.project.pages.LoginPage;
 import com.automation.project.pages.ProductsPage;
 import com.automation.project.utilities.PageManager;
+import org.openqa.selenium.WebElement;
+
+import java.lang.reflect.Method;
 
 import static org.hamcrest.Matchers.is;
 
@@ -13,7 +16,6 @@ import static org.hamcrest.Matchers.is;
 public class LoginActions extends DriverFactory {
     private final LoginPage loginPage = new LoginPage(getDriver());
     private final ProductsPage productsPage = new ProductsPage(getDriver());
-    private final CommonActions commonActions = new CommonActions();
     private final ScenarioContext scenarioContext = ScenarioContext.getInstance();
 
     public void logIn(String username, String password) throws Throwable {
@@ -33,7 +35,8 @@ public class LoginActions extends DriverFactory {
     }
 
     private void clickSubmit() throws Throwable {
-        commonActions.clickButton("Submit");
+        Method method = scenarioContext.getCurrentPage().getClass().getMethod("getSubmitButton");
+        ((WebElement) method.invoke(scenarioContext.getCurrentPage())).click();
         scenarioContext.setCurrentPage(new ProductsPage(getDriver()));
         waitFor(2);
     }

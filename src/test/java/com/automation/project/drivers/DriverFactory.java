@@ -6,9 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 
@@ -44,11 +42,6 @@ public class DriverFactory {
 
     public static void waitFor(int sec) {
         driver.manage().timeouts().implicitlyWait(sec, TimeUnit.SECONDS);
-    }
-
-    public static WebDriverWait getExplicitWait() {
-        long explicitWaitTime = Long.parseLong(ConfigurationProperties.getConfigPropertyValue("explicit.wait.time"));
-        return new WebDriverWait(driver, Duration.ofSeconds(explicitWaitTime));
     }
 
 }

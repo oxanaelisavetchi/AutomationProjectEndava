@@ -14,9 +14,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @Slf4j
-public class RestApi {
+public class RestApiSteps {
 
     private Response response;
+    private final static String baseUrl = "https://reqres.in/api/";
 
     private final String restApiUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
 
@@ -89,7 +90,7 @@ public class RestApi {
                 .contentType("application/json")
                 .body(data.toString())
                 .when()
-                .post(url)
+                .post(baseUrl + url)
                 .then()
                 .header("Content-Type", "application/json; charset=utf-8").extract().response();
     }
