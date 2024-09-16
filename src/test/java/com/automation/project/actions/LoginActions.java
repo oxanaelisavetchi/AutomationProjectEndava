@@ -38,12 +38,12 @@ public class LoginActions extends DriverFactory {
         Method method = scenarioContext.getCurrentPage().getClass().getMethod("getSubmitButton");
         ((WebElement) method.invoke(scenarioContext.getCurrentPage())).click();
         scenarioContext.setCurrentPage(new ProductsPage(getDriver()));
-        waitFor(2);
+        waitLoading(2);
     }
 
     public void logOut() {
         productsPage.getBurgerMenuButton().click();
-        waitFor(2);
+        waitLoading(2);
         productsPage.getLogoutButton().click();
     }
 

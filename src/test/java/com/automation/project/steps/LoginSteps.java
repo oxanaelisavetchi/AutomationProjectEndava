@@ -18,14 +18,13 @@ public class LoginSteps {
         logInActions.logIn(userName, password);
     }
 
-    @Then("products label is displayed")
-    public void productsLabelIsDisplayed() {
+    @Then("user enters on product page")
+    public void userEntersOnProductPage() {
         CustomAssert.assertThat("User in on Account page  ", scenarioContext.getCurrentPage().getAnchorElement().isDisplayed(), is(true));
-        logInActions.logOut();
     }
 
-    @Then("error message is displayed {string}")
-    public void errorLabelIsDisplayed(String message) {
+    @Then("user receives message {string}")
+    public void userReceivesMessage(String message) {
         CustomAssert.assertThat(message, message.equals(logInActions.checkError()), is(true));
     }
 }

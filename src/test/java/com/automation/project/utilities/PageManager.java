@@ -1,6 +1,5 @@
 package com.automation.project.utilities;
 
-
 import com.automation.project.configuration.ConfigurationProperties;
 import com.automation.project.drivers.DriverFactory;
 import com.automation.project.pages.BasePage;

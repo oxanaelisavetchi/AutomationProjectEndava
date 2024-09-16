@@ -19,6 +19,6 @@ public abstract class BasePage {
     public WebElement linkShoppingCart;
 
     public WebElement getAnchorElement() {
-        return linkShoppingCart; //getShoppingCartElement
+        return linkShoppingCart;
     }
 }

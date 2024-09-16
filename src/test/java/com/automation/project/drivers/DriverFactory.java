@@ -7,7 +7,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 
 public class DriverFactory {
@@ -39,9 +39,8 @@ public class DriverFactory {
         }
     }
 
-
-    public static void waitFor(int sec) {
-        driver.manage().timeouts().implicitlyWait(sec, TimeUnit.SECONDS);
+    public static void waitLoading(int sec) {
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(sec));;
     }
 
 }

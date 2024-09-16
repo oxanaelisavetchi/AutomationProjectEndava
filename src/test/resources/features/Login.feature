@@ -8,7 +8,7 @@ Feature: Login Tests
   @ValidCredentials
   Scenario Outline: Check the login functionality with valid credentials
     When user enters the <username> and <password>
-    Then products label is displayed
+    Then user enters on product page
 
     Examples:
       | username                  | password       |
@@ -19,7 +19,7 @@ Feature: Login Tests
   @Negative @InvalidPassword
   Scenario Outline: Check the login functionality with invalid password
     When user enters the <username> and <password>
-    Then error message is displayed <message>
+    Then user receives message <message>
 
     Examples:
       | username                  | password        | message                                                                     |
@@ -40,7 +40,7 @@ Feature: Login Tests
   @InvalidUsername
   Scenario Outline: Check the login functionality with invalid username and valid password
     When user enters the <username> and <password>
-    Then error message is displayed <message>
+    Then user receives message <message>
 
     Examples:
       | username     | password       | message                                                                     |
@@ -51,7 +51,7 @@ Feature: Login Tests
   @InvalidCredentials
   Scenario Outline: Check the error message with invalid credentials
     When user enters the <username> and <password>
-    Then error message is displayed <message>
+    Then user receives message <message>
 
     Examples:
       | username     | password        | message                                                                     |

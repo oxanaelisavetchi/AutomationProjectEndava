@@ -1,6 +1,5 @@
 package com.automation.project.pages;
 
-
 import lombok.Getter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
