@@ -1,7 +1,9 @@
 package com.automation.project.steps;
 
+import com.automation.project.actions.RestApiActions;
 import com.automation.project.asserts.CustomAssert;
 import com.automation.project.configuration.ConfigurationProperties;
+import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -10,6 +12,7 @@ import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
+import static com.automation.project.actions.RestApiActions.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -23,8 +26,7 @@ public class RestApiSteps {
 
     @Given("availability of the test site")
     public void availabilityOfTheTestSite() {
-        checkResponse("Site is available ",
-                given().baseUri(baseUrl).when().get().then().extract().response().statusCode(), 200);
+        checkResponse("Site is available ", given().baseUri(baseUrl).when().get().then().extract().response().statusCode(), 200);
     }
 
     @When("run request {string}")
@@ -38,7 +40,7 @@ public class RestApiSteps {
     }
 
     @Then("check get response {string}, {int}, {string}")
-    public void checkGetResponse(String data, int value, String message) {
+    public void checkGetResponse(String data, int value, String message) throws JsonProcessingException {
         if (response.statusCode() == 200) {
             CustomAssert.assertThat(message, response.getBody().jsonPath().get(data), is(value));
         }
@@ -62,12 +64,12 @@ public class RestApiSteps {
     }
 
     @When("run put request {string} with {string} and {string}")
-    public void runPutRequest(String url, String field, String value) {
+    public void runPutRequests(String url, String field, String value) {
         response = runPutRequest(getJsonObject(field, value), url);
     }
 
     @Then("check response {string}")
-    public void checkResponse(String message) {
+    public void checkResponses(String message) {
         CustomAssert.assertThat(message, response.getBody().jsonPath().get("updatedAt"), notNullValue());
     }
 
@@ -81,62 +83,6 @@ public class RestApiSteps {
         response = given()
                 .delete(collectUrl(path))
                 .then().extract().response();
-    }
-
-
-    private static Response runPostRequest(JSONObject data, String path) {
-        return given()
-                .contentType("application/json")
-                .body(data.toString())
-                .when()
-                .post(collectUrl(path))
-                .then()
-                .header("Content-Type", "application/json; charset=utf-8").extract().response();
-    }
-
-    private static Response runPutRequest(JSONObject data, String path) {
-        return given()
-                .contentType("application/json")
-                .body(data.toString())
-                .when()
-                .put(collectUrl(path))
-                .then()
-                .header("Content-Type", "application/json; charset=utf-8").extract().response();
-    }
-
-    private static Response runPatchRequest(JSONObject data, String path) {
-        return given()
-                .contentType("application/json")
-                .body(data.toString())
-                .when()
-                .patch(collectUrl(path))
-                .then()
-                .header("Content-Type", "application/json; charset=utf-8").extract().response();
-    }
-
-    private void checkResponse(String msg, Object response, Object result) {
-        CustomAssert.assertThat(msg, response, is(result));
-    }
-
-    private static JSONObject getJsonObject(String field, String value) {
-        JSONObject data = new JSONObject();
-
-        if (field.contains(",")) {
-
-            String[] dataNames = field.split(",", 2);
-            String[] val = value.split(",", 2);
-
-            for (int i = 0; i < dataNames.length; i++) {
-                data.put(dataNames[i], val[i]);
-            }
-        } else {
-            data.put(field, value);
-        }
-        return data;
-    }
-
-    private static String collectUrl(String path) {
-        return baseUrl + "api/" + path;
     }
 
 }
