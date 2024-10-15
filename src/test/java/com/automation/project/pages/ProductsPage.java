@@ -23,6 +23,34 @@ public class ProductsPage extends BasePage {
     @FindBy(css = ".error-message-container")
     private WebElement errorMessage;
 
+    @FindBy(xpath = "//div[@data-test='inventory-item-name']")
+    public WebElement name;
+
+    @FindBy(xpath = "//div[@data-test='inventory-item-desc']")
+    public WebElement description;
+
+    @FindBy(xpath = "//div[@class='inventory_details_price']")
+    public WebElement price;
+
+    @FindBy(xpath = "//*[@id='add-to-cart']")
+    public WebElement buttonAddCart;
+
+    @FindBy(xpath = "//select")
+    public WebElement selectProductSortContainer;
+
+    @FindBy(xpath = "//option[@value='az']")
+    public WebElement optionAZ;
+
+    @FindBy(xpath = "//option[@value='za']")
+    public WebElement optionZA;
+
+    @FindBy(xpath = "//option[@value='lohi']")
+    public WebElement optionLH;
+
+    @FindBy(xpath = "//option[@value='hilo']")
+    public WebElement optionHL;
+
+
     @Override
     public WebElement getAnchorElement() {
         return shoppingCartContainer;

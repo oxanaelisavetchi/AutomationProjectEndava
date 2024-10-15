@@ -41,12 +41,6 @@ public class LoginActions extends DriverFactory {
         waitLoading(2);
     }
 
-    public void logOut() {
-        productsPage.getBurgerMenuButton().click();
-        waitLoading(2);
-        productsPage.getLogoutButton().click();
-    }
-
     public String checkError() {
         return productsPage.getErrorMessage().getText();
     }
