@@ -1,6 +1,5 @@
 package com.automation.project.steps;
 
-import com.automation.project.actions.RestApiActions;
 import com.automation.project.asserts.CustomAssert;
 import com.automation.project.configuration.ConfigurationProperties;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,7 +9,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 
 import static com.automation.project.actions.RestApiActions.*;
 import static io.restassured.RestAssured.given;

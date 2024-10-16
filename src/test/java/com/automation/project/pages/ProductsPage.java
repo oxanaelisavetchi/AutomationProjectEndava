@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.List;
+
 @Getter
 public class ProductsPage extends BasePage {
     public ProductsPage(WebDriver driver) {
@@ -23,19 +25,16 @@ public class ProductsPage extends BasePage {
     @FindBy(css = ".error-message-container")
     private WebElement errorMessage;
 
-    @FindBy(xpath = "//div[@data-test='inventory-item-name']")
-    public WebElement name;
+    @FindBy(css = "div.inventory_item_name")
+    public List<WebElement> nameList;
+    
+    @FindBy(css = "div.inventory_item_desc")
+    public List<WebElement> descriptionList;
 
-    @FindBy(xpath = "//div[@data-test='inventory-item-desc']")
-    public WebElement description;
+    @FindBy(css = "div.inventory_item_price")
+    public List<WebElement> pricesList;
 
-    @FindBy(xpath = "//div[@class='inventory_details_price']")
-    public WebElement price;
-
-    @FindBy(xpath = "//*[@id='add-to-cart']")
-    public WebElement buttonAddCart;
-
-    @FindBy(xpath = "//select")
+    @FindBy(css = "select[data-test='product-sort-container']")
     public WebElement selectProductSortContainer;
 
     @FindBy(xpath = "//option[@value='az']")
@@ -50,6 +49,8 @@ public class ProductsPage extends BasePage {
     @FindBy(xpath = "//option[@value='hilo']")
     public WebElement optionHL;
 
+    @FindBy(css = "#shopping_cart_container")
+    public WebElement shoppingCart;
 
     @Override
     public WebElement getAnchorElement() {

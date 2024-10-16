@@ -1,16 +1,16 @@
 package com.automation.project.entity;
 
 public class Product {
+
     private String name;
     private String description;
     private double price;
-    private String img;
 
     public Product() {
 
     }
 
-    public Product(String name, String description, double price, String img) {
+    public Product(String name, String description, double price) {
     }
 
     public String getName() {
@@ -37,11 +37,4 @@ public class Product {
         this.price = price;
     }
 
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
 }

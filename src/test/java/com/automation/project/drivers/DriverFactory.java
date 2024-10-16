@@ -3,6 +3,7 @@ package com.automation.project.drivers;
 import com.automation.project.configuration.ConfigurationProperties;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -24,7 +25,13 @@ public class DriverFactory {
                 case "firefox" -> driver = new FirefoxDriver();
                 case "ie" -> driver = new InternetExplorerDriver();
                 case "edge" -> driver = new EdgeDriver();
-                default -> driver = new ChromeDriver();
+                default -> {
+                    ChromeOptions options = new ChromeOptions();
+                    options.addArguments("-headless=new");
+                    options.addArguments("-disable-gpu");
+                    options.addArguments("-incognito");
+                    driver = new ChromeDriver(options);
+                }
             }
 
             driver.manage().window().maximize();
@@ -40,7 +47,7 @@ public class DriverFactory {
     }
 
     public static void waitLoading(int sec) {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(sec));;
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(sec));
     }
 
 }
