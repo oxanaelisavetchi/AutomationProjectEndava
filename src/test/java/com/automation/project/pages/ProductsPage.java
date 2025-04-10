@@ -9,6 +9,7 @@ import java.util.List;
 
 @Getter
 public class ProductsPage extends BasePage {
+
     public ProductsPage(WebDriver driver) {
         super(driver);
     }
