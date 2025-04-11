@@ -5,6 +5,7 @@ import com.automation.project.context.ScenarioContext;
 import com.automation.project.drivers.DriverFactory;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
+import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
@@ -18,6 +19,17 @@ public class Hooks {
 
     private final ScenarioContext scenarioContext = ScenarioContext.getInstance();
 
+    @Before(order = 1)
+    public void beforeAnyScenario() {
+        System.out.println(">>> Rulez before pentru toate scenariile (ORDER = 1)");
+    }
+
+    @Before("@UI")
+    public void beforeUIOnly() {
+        System.out.println(">>> Pregătesc WebDriver pentru test UI (@UI)");
+        DriverFactory.getDriver();
+    }
+
     @AfterStep
     public void takeScreenshot(Scenario scenario) throws Exception {
 
@@ -29,6 +41,11 @@ public class Hooks {
                     scenario.getName()));
             FileUtils.copyFile(scr, dest);
         }
+    }
+    @After("@Api")
+    public void afterApiScenario() {
+        System.out.println(">>> Cleanup API după scenariu cu tag @Api");
+        // aici poți adăuga logică specială dacă e nevoie
     }
 
     @After
