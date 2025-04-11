@@ -27,7 +27,7 @@ public class NoPojoTest {
         Response response = given()
                 .when()
                 .get("api/users?page=2")
-                .then()
+                .then().log().all()
                 .body("page", equalTo(2))
                 .body("data.id", notNullValue())
                 .body("data.email", notNullValue())

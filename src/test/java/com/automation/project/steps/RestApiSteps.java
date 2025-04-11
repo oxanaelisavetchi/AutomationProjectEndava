@@ -2,13 +2,19 @@ package com.automation.project.steps;
 
 import com.automation.project.asserts.CustomAssert;
 import com.automation.project.configuration.ConfigurationProperties;
+import com.automation.project.entity.SuccessUserReg;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+
+import java.util.Map;
 
 import static com.automation.project.actions.RestApiActions.*;
 import static io.restassured.RestAssured.given;
@@ -55,9 +61,10 @@ public class RestApiSteps {
     }
 
     @Then("check post response {string}, {string}")
-    public void checkPostResponse(String message, String resp) {
-        if (!resp.isEmpty() && response.statusCode() < 400) {
-            CustomAssert.assertThat(message, response.getBody().jsonPath().get("token"), is(resp));
+    public void checkPostResponse(String message, String expectedToken) throws Exception {
+        if (!expectedToken.isEmpty() && response.statusCode() < 400) {
+            SuccessUserReg user = new ObjectMapper().readValue(response.asString(), SuccessUserReg.class);
+            CustomAssert.assertThat(message, user.getToken(), is(expectedToken));
         }
     }
 
@@ -82,5 +89,34 @@ public class RestApiSteps {
                 .delete(collectUrl(path))
                 .then().extract().response();
     }
+    @When("I create a user with the following details:")
+    public void createUserWithDataTable(DataTable table) {
+        Map<String, String> userData = table.asMap(String.class, String.class);
+
+        System.out.println("Trimitem acest JSON: " + userData);
+
+        response = given()
+                .baseUri(baseUrl)
+                .contentType("application/json")
+                .body(userData)
+                .when()
+                .post("api/register")
+                .then()
+                .extract().response();
+    }
+
+    @Then("the response should contain token")
+    public void responseShouldContainToken() {
+        System.out.println("Response: " + response.asString());
+
+        String error = response.jsonPath().get("error");
+        if (error != null) {
+            Assertions.fail("Request failed: " + error);
+        }
+
+        String token = response.jsonPath().get("token");
+        Assertions.assertNotNull(token, "Token is null – user may not be registered.");
+    }
+
 
 }

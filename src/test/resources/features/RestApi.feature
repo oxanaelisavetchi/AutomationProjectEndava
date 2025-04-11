@@ -62,3 +62,11 @@ Feature: Rest Api Tests
     Examples:
       | path      | status | message         |
       | "users/2" | 204    | "User deleted " |
+
+  @APITest
+  Scenario: Create a user with data table
+    When I create a user with the following details:
+      | email    | eve.holt@reqres.in |
+      | password | pistol              |
+    Then the response should contain token
+
