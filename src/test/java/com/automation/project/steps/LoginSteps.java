@@ -3,11 +3,14 @@ package com.automation.project.steps;
 import com.automation.project.actions.LoginActions;
 import com.automation.project.asserts.CustomAssert;
 import com.automation.project.context.ScenarioContext;
+import com.automation.project.enums.ErrorMessages;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import lombok.extern.slf4j.Slf4j;
 
 import static org.hamcrest.Matchers.is;
 
+@Slf4j
 public class LoginSteps {
 
     private final LoginActions logInActions = new LoginActions();
@@ -15,6 +18,7 @@ public class LoginSteps {
 
     @When("user enters the {string} and {string}")
     public void userLogsWithCredentials(String userName, String password) throws Throwable {
+        log.info("Trying to log in with username: '{}' and password: '{}'", userName, password);
         logInActions.logIn(userName, password);
     }
 
@@ -24,7 +28,9 @@ public class LoginSteps {
     }
 
     @Then("user receives message {string}")
-    public void userReceivesMessage(String message) {
-        CustomAssert.assertThat(message, message.equals(logInActions.checkError()), is(true));
+    public void userReceivesMessage(String messageKey) {
+        String actualError = logInActions.checkError();
+        String expectedError = ErrorMessages.valueOf(messageKey).getMessage();
+        CustomAssert.assertThat("Error message validation", actualError, is(expectedError));
     }
 }

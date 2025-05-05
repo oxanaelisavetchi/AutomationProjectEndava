@@ -3,6 +3,7 @@ package com.automation.project.steps;
 import com.automation.project.asserts.CustomAssert;
 import com.automation.project.configuration.ConfigurationProperties;
 import com.automation.project.entity.SuccessUserReg;
+import com.automation.project.enums.ApiPaths;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.datatable.DataTable;
@@ -28,32 +29,56 @@ public class RestApiSteps {
 
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
 
-    @Given("availability of the test site")
-    public void availabilityOfTheTestSite() {
-        checkResponse("Site is available ", given().baseUri(baseUrl).when().get().then().extract().response().statusCode(), 200);
+    @Given("the API is reachable at base URL")
+    public void apiIsReachableAtBaseUrl() {
+        log.info("Checking availability of base API URL: {}", baseUrl);
+
+        int statusCode = given()
+                .baseUri(baseUrl)
+                .when()
+                .get()
+                .then()
+                .extract()
+                .statusCode();
+
+        log.info("Status code received: {}", statusCode);
+        CustomAssert.assertThat("API availability check", statusCode, is(200));
     }
 
     @When("run request {string}")
     public void runRequestUrl(String url) {
-        response = given().baseUri(baseUrl).when().get(collectUrl(url)).then().extract().response();
+        ApiPaths apiPath = ApiPaths.valueOf(url);
+        response = runGetRequest(apiPath.getPath());
+        log.info("Response: {}", response.asString());
     }
+
 
     @And("check get status code {int}, {string}")
     public void checkGetStatusCode(int resp, String message) {
+        // get from scenario context
         checkResponse(message, response.statusCode(), resp);
     }
 
     @Then("check get response {string}, {int}, {string}")
-    public void checkGetResponse(String data, int value, String message) throws JsonProcessingException {
+    public void checkGetResponse(String data, int value, String message) {
+        log.info("Validating JSON path '{}' equals value '{}'", data, value);
+
         if (response.statusCode() == 200) {
-            CustomAssert.assertThat(message, response.getBody().jsonPath().get(data), is(value));
+            Object actualValue = response.getBody().jsonPath().get(data);
+            log.info("Actual value for {}: {}", data, actualValue);
+
+            CustomAssert.assertThat(message, actualValue, is(value));
+        } else {
+            log.warn("Skipping response value check — status: {}", response.statusCode());
         }
     }
 
     @When("run request {string} with {string} and {string}")
     public void runRequest(String url, String field, String value) {
-        response = runPostRequest(getJsonObject(field, value), url);
+        ApiPaths apiPath = ApiPaths.valueOf(url);
+        response = runPostRequest(getJsonObject(field, value), apiPath.getPath());
     }
+
 
     @And("check status code {int}, {string}")
     public void checkStatusCode(int statusCode, String message) {
@@ -70,8 +95,10 @@ public class RestApiSteps {
 
     @When("run put request {string} with {string} and {string}")
     public void runPutRequests(String url, String field, String value) {
-        response = runPutRequest(getJsonObject(field, value), url);
+        ApiPaths apiPath = ApiPaths.valueOf(url);
+        response = runPutRequest(getJsonObject(field, value), apiPath.getPath());
     }
+
 
     @Then("check response {string}")
     public void checkResponses(String message) {
@@ -80,20 +107,27 @@ public class RestApiSteps {
 
     @When("run patch request {string} with {string} and {string}")
     public void runPatchRequestUrlWithDataAndValue(String url, String field, String value) {
-        response = runPatchRequest(getJsonObject(field, value), url);
+        ApiPaths apiPath = ApiPaths.valueOf(url);
+        response = runPatchRequest(getJsonObject(field, value), apiPath.getPath());
     }
+
 
     @When("run delete request {string}")
     public void deleteFunctionality(String path) {
+        ApiPaths apiPath = ApiPaths.valueOf(path);
         response = given()
-                .delete(collectUrl(path))
-                .then().extract().response();
+                .baseUri(baseUrl)
+                .when()
+                .delete(collectUrl(apiPath.getPath()))
+                .then()
+                .extract().response();
     }
+
+
     @When("I create a user with the following details:")
     public void createUserWithDataTable(DataTable table) {
         Map<String, String> userData = table.asMap(String.class, String.class);
-
-        System.out.println("Trimitem acest JSON: " + userData);
+        log.info("Trimitem acest JSON: {}", userData);
 
         response = given()
                 .baseUri(baseUrl)

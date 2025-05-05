@@ -19,7 +19,7 @@ public class Hooks {
 
     private final ScenarioContext scenarioContext = ScenarioContext.getInstance();
 
-    @Before(order = 1)
+   /* @Before(order = 1)
     public void beforeAnyScenario() {
         System.out.println(">>> Rulez before pentru toate scenariile (ORDER = 1)");
     }
@@ -28,7 +28,7 @@ public class Hooks {
     public void beforeUIOnly() {
         System.out.println(">>> Pregătesc WebDriver pentru test UI (@UI)");
         DriverFactory.getDriver();
-    }
+    }*/
 
     @AfterStep
     public void takeScreenshot(Scenario scenario) throws Exception {
@@ -42,11 +42,11 @@ public class Hooks {
             FileUtils.copyFile(scr, dest);
         }
     }
-    @After("@Api")
+    /*@After("@Api")
     public void afterApiScenario() {
         System.out.println(">>> Cleanup API după scenariu cu tag @Api");
         // aici poți adăuga logică specială dacă e nevoie
-    }
+    }*/
 
     @After
     public void closeSession() {

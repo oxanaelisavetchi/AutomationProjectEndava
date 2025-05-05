@@ -30,7 +30,10 @@ public class LoginActions extends DriverFactory {
     }
 
     private void enterCredentials(String username, String password) {
+        loginPage.getLoginField().clear();
         loginPage.getLoginField().sendKeys(username);
+
+        loginPage.getPasswordField().clear();
         loginPage.getPasswordField().sendKeys(password);
     }
 

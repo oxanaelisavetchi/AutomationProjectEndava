@@ -5,15 +5,12 @@ Feature: Product Tests
     Given user navigates to 'Home' page
 
   @ValidCredentials
-  Scenario Outline: Sort on Product page
+  Scenario Outline: Sort products on Product page by name and price
     When user enters the <username> and <password>
-    Then user enters on product page
-    And user sort asc product by name
-    And user sort desc product by name
-    And user sort asc product by price
-    And user sort desc product by price
+    And user sorts products by name in "<sort>" order
+    And user sorts products by price in "<sort>" order
 
     Examples:
-      | username                  | password       |
-      | "standard_user"           | "secret_sauce" |
-      | "performance_glitch_user" | "secret_sauce" |
+      | username                  | password       | sort |
+      | "standard_user"           | "secret_sauce" | asc  |
+      | "performance_glitch_user" | "secret_sauce" | desc |

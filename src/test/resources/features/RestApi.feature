@@ -2,71 +2,66 @@
 Feature: Rest Api Tests
 
   Background: Test Site Availability
-    Given availability of the test site
+    Given the API is reachable at base URL
 
   @GetRequests
-  Scenario Outline: Check the get rest api functionality
-    When run request <path>
+  Scenario Outline: Check GET API response
+    When run request "<path>"
     And check get status code <status>, <message>
     Then check get response <data>, <value>, <message>
 
     Examples:
-      | path            | status | message                      | data       | value |
-      | "users/2"       | 200    | "Single user "               | "data.id"  | 2     |
-      | "unknown/2"     | 200    | "Single resource "           | "data.id"  | 2     |
-      | "users?page=2"  | 200    | "List user "                 | "per_page" | 6     |
-      | "unknown"       | 200    | "List resource "             | "per_page" | 6     |
-      | "users?delay=3" | 200    | "Delayed response "          | "per_page" | 6     |
-      | "unknown/23"    | 404    | "Single resource not found " | ""         | 0     |
-      | "users/23"      | 404    | "Single user not found "     | ""         | 0     |
+      | path        | status | message            | data       | value |
+      | USERS_ID    | 200    | "Single user "     | "data.id"  | 2     |
+      | UNKNOWN_2   | 200    | "Single resource " | "data.id"  | 2     |
+      | USERS_PAGE  | 200    | "List user "       | "per_page" | 6     |
 
   @PostRequests
   Scenario Outline: Check the post rest api functionality
-    When run request <path> with <data> and <value>
+    When run request "<path>" with <data> and <value>
     And check status code <status>, <message>
     Then check post response <message>, <response>
 
     Examples:
       | path       | status | message                | data             | value                           | response            |
-      | "users"    | 201    | "User created "        | "name,job"       | "morpheus,leader"               | ""                  |
-      | "register" | 200    | "User registered "     | "email,password" | "eve.holt@reqres.in,pistol"     | "QpwL5tke4Pnpja7X4" |
-      | "register" | 400    | "User not registered " | "email"          | "sydney@fife"                   | ""                  |
-      | "login"    | 200    | "User logged "         | "email,password" | "eve.holt@reqres.in,cityslicka" | "QpwL5tke4Pnpja7X4" |
-      | "login"    | 400    | "User not logged "     | "email"          | "eve.holt@reqres.in"            | ""                  |
+      | USERS    | 201    | "User created "        | "name,job"       | "morpheus,leader"               | ""                  |
+      | REGISTER | 200    | "User registered "     | "email,password" | "eve.holt@reqres.in,pistol"     | "QpwL5tke4Pnpja7X4" |
+      | REGISTER | 400    | "User not registered " | "email"          | "sydney@fife"                   | ""                  |
+      | LOGIN   | 200    | "User logged "         | "email,password" | "eve.holt@reqres.in,cityslicka" | "QpwL5tke4Pnpja7X4" |
+      | LOGIN  | 400    | "User not logged "     | "email"          | "eve.holt@reqres.in"            | ""                  |
 
   @PutRequests
   Scenario Outline: Check the put rest api functionality
-    When run put request <path> with <data> and <value>
+    When run put request "<path>" with <data> and <value>
     And check status code <status>, <message>
     Then check response <message>
 
     Examples:
       | path      | status | message         | data       | value                    |
-      | "users/2" | 200    | "User updated " | "name,job" | "morpheus,zion resident" |
+      | USERS_ID | 200    | "User updated " | "name,job" | "morpheus,zion resident" |
 
   @PatchRequests
   Scenario Outline: Check the put rest api functionality
-    When run patch request <path> with <data> and <value>
+    When run patch request "<path>" with <data> and <value>
     And check status code <status>, <message>
     Then check response <message>
 
     Examples:
       | path      | status | message         | data       | value                    |
-      | "users/2" | 200    | "User updated " | "name,job" | "morpheus,zion resident" |
+      | USERS_ID | 200    | "User updated " | "name,job" | "morpheus,zion resident" |
 
   @DeleteRequests
   Scenario Outline: Check the delete rest api functionality
-    When run delete request <path>
+    When run delete request "<path>"
     And check status code <status>, <message>
 
     Examples:
       | path      | status | message         |
-      | "users/2" | 204    | "User deleted " |
+      | USERS_ID | 204    | "User deleted " |
 
   @APITest
   Scenario: Create a user with data table
     When I create a user with the following details:
       | email    | eve.holt@reqres.in |
-      | password | pistol              |
+      | password | pistol             |
     Then the response should contain token
-

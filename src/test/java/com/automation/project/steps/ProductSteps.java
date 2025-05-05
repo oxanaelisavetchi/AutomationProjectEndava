@@ -11,32 +11,34 @@ import java.util.List;
 public class ProductSteps {
     private final ProductActions productActions = new ProductActions();
 
-    @Then("user sort asc product by name")
-    public void usersSortASCProductByName() {
-        productActions.selectAZOption();
-        List<Product> productList = productActions.getProducts();
-        Assertions.assertEquals(productList, productActions.getASCProductsByName(productList));
+    @Then("user sorts products by name in {string} order")
+    public void userSortsProductsByName(String order) {
+        if (order.equalsIgnoreCase("asc")) {
+            productActions.selectAZOption();
+            List<Product> actual = productActions.getProducts();
+            List<Product> expected = productActions.getASCProductsByName(actual);
+            Assertions.assertEquals(expected, actual);
+        } else {
+            productActions.selectZAOption();
+            List<Product> actual = productActions.getProducts();
+            List<Product> expected = productActions.getDESCProductsByName(actual);
+            Assertions.assertEquals(expected, actual);
+        }
     }
 
-    @Then("user sort desc product by name")
-    public void usersSortDESCProductByName() {
-        productActions.selectZAOption();
-        List<Product> productList = productActions.getProducts();
-        Assertions.assertEquals(productList, productActions.getDESCProductsByName(productList));
-    }
-
-    @Then("user sort asc product by price")
-    public void usersSortASCProductByPrice() {
-        productActions.selectLHOption();
-        List<Product> productList = productActions.getProducts();
-        Assertions.assertEquals(productList, productActions.getASCProductsByPrice(productList));
-    }
-
-    @Then("user sort desc product by price")
-    public void usersSortDESCProductByPrice() {
-        productActions.selectHLOption();
-        List<Product> productList = productActions.getProducts();
-        Assertions.assertEquals(productList, productActions.getDESCProductsByPrice(productList));
+    @Then("user sorts products by price in {string} order")
+    public void userSortsProductsByPrice(String order) {
+        if (order.equalsIgnoreCase("asc")) {
+            productActions.selectLHOption();
+            List<Product> actual = productActions.getProducts();
+            List<Product> expected = productActions.getASCProductsByPrice(actual);
+            Assertions.assertEquals(expected, actual);
+        } else {
+            productActions.selectHLOption();
+            List<Product> actual = productActions.getProducts();
+            List<Product> expected = productActions.getDESCProductsByPrice(actual);
+            Assertions.assertEquals(expected, actual);
+        }
     }
 
 }

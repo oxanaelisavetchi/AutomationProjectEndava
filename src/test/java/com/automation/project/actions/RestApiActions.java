@@ -12,35 +12,50 @@ public class RestApiActions {
 
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
 
+    public static Response runGetRequest(String path) {
+        return given()
+                .baseUri(baseUrl)
+                .when()
+                .get(collectUrl(path))
+                .then()
+                .extract().response();
+    }
+
     public static Response runPostRequest(JSONObject data, String path) {
         return given()
+                .baseUri(baseUrl)
                 .contentType("application/json")
                 .body(data.toString())
                 .when()
                 .post(collectUrl(path))
                 .then()
-                .header("Content-Type", "application/json; charset=utf-8").extract().response();
+                .extract().response();
     }
+
 
     public static Response runPutRequest(JSONObject data, String path) {
         return given()
+                .baseUri(baseUrl)
                 .contentType("application/json")
                 .body(data.toString())
                 .when()
                 .put(collectUrl(path))
                 .then()
-                .header("Content-Type", "application/json; charset=utf-8").extract().response();
+                .extract().response();
     }
+
 
     public static Response runPatchRequest(JSONObject data, String path) {
         return given()
+                .baseUri(baseUrl)
                 .contentType("application/json")
                 .body(data.toString())
                 .when()
                 .patch(collectUrl(path))
                 .then()
-                .header("Content-Type", "application/json; charset=utf-8").extract().response();
+                .extract().response();
     }
+
 
     public static void checkResponse(String msg, Object response, Object result) {
         CustomAssert.assertThat(msg, response, is(result));

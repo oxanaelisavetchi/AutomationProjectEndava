@@ -12,7 +12,7 @@ public class HomePage extends BasePage {
         super(driver);
     }
 
-    @FindBy(xpath = "//div[@class='login_logo']")
+    @FindBy(xpath = "//*[@id=\"root\"]/div/div[1]")
     private WebElement pageTitleElement;
 
     @Override

@@ -14,12 +14,13 @@ import java.time.Duration;
 public class DriverFactory {
 
     private static WebDriver driver;
+    private static final String BROWSER = ConfigurationProperties.getConfigPropertyValue("browser");
 
     public static WebDriver getDriver() {
 
         if (driver == null) {
 
-            String browser = System.getProperty("browser", ConfigurationProperties.getConfigPropertyValue("browser"));
+            String browser = System.getProperty("browser", BROWSER);
 
             switch (browser.toLowerCase()) {
                 case "firefox" -> driver = new FirefoxDriver();

@@ -10,14 +10,17 @@ import com.automation.project.utilities.PageManager;
 public class NavigationActions extends DriverFactory {
 
     private final ScenarioContext scenarioContext = ScenarioContext.getInstance();
+    private final String baseUrl = ConfigurationProperties.getConfigPropertyValue("base.url");
 
     public void navigateToPage(String pageName) {
         BasePage page = PageManager.getPageByName(pageName);
-        navigateToLink(ConfigurationProperties.getConfigPropertyValue("base.url") + page.getURL());
+        String fullUrl = baseUrl + page.getURL();
+        navigateToLink(fullUrl);
         scenarioContext.setCurrentPage(page);
     }
 
     private void navigateToLink(String link) {
+
         DriverFactory.getDriver().navigate().to(link);
     }
 }

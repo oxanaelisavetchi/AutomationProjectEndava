@@ -19,47 +19,48 @@ Feature: Login Tests
   @Negative @InvalidPassword
   Scenario Outline: Check the login functionality with invalid password
     When user enters the <username> and <password>
-    Then user receives message <message>
+    Then user receives message "<message>"
 
     Examples:
-      | username                  | password        | message                                                                     |
-      | "performance_glitch_user" | ""              | "Epic sadface: Password is required"                                        |
-      | "standard_user"           | ""              | "Epic sadface: Password is required"                                        |
-      | "locked_out_user"         | ""              | "Epic sadface: Password is required"                                        |
-      | "problem_user"            | ""              | "Epic sadface: Password is required"                                        |
-      | "locked_out_user"         | "secret_sauce"  | "Epic sadface: Sorry, this user has been locked out."                       |
-      | "standard_user"           | "secrets_sauce" | "Epic sadface: Username and password do not match any user in this service" |
-      | "standard_user"           | " "             | "Epic sadface: Username and password do not match any user in this service" |
-      | "locked_out_user"         | " "             | "Epic sadface: Username and password do not match any user in this service" |
-      | "problem_user"            | "wsecret_sauce" | "Epic sadface: Username and password do not match any user in this service" |
-      | "problem_user"            | " "             | "Epic sadface: Username and password do not match any user in this service" |
-      | "performance_glitch_user" | "secret_sauced" | "Epic sadface: Username and password do not match any user in this service" |
-      | "performance_glitch_user" | " "             | "Epic sadface: Username and password do not match any user in this service" |
+      | username                  | password        | message             |
+      | "performance_glitch_user" | ""              | PASSWORD_REQUIRED   |
+      | "standard_user"           | ""              | PASSWORD_REQUIRED   |
+      | "locked_out_user"         | ""              | PASSWORD_REQUIRED   |
+      | "problem_user"            | ""              | PASSWORD_REQUIRED   |
+      | "locked_out_user"         | "secret_sauce"  | LOCKED_OUT_USER     |
+      | "standard_user"           | "secrets_sauce" | INVALID_CREDENTIALS |
+      | "standard_user"           | " "             | INVALID_CREDENTIALS |
+      | "locked_out_user"         | " "             | INVALID_CREDENTIALS |
+      | "problem_user"            | "wsecret_sauce" | INVALID_CREDENTIALS |
+      | "problem_user"            | " "             | INVALID_CREDENTIALS |
+      | "performance_glitch_user" | "secret_sauced" | INVALID_CREDENTIALS |
+      | "performance_glitch_user" | " "             | INVALID_CREDENTIALS |
 
 
   @InvalidUsername
   Scenario Outline: Check the login functionality with invalid username and valid password
     When user enters the <username> and <password>
-    Then user receives message <message>
+    Then user receives message "<message>"
 
     Examples:
-      | username     | password       | message                                                                     |
-      | "wrong_user" | "secret_sauce" | "Epic sadface: Username and password do not match any user in this service" |
-      | "12&3"       | "secret_sauce" | "Epic sadface: Username and password do not match any user in this service" |
+      | username     | password       | message            |
+      | "wrong_user" | "secret_sauce" | INVALID_CREDENTIALS|
+      | "12&3"       | "secret_sauce" | INVALID_CREDENTIALS|
 
 
   @InvalidCredentials
   Scenario Outline: Check the error message with invalid credentials
     When user enters the <username> and <password>
-    Then user receives message <message>
+    Then user receives message "<message>"
 
     Examples:
-      | username     | password        | message                                                                     |
-      | ""           | ""              | "Epic sadface: Username is required"                                        |
-      | " "          | ""              | "Epic sadface: Password is required"                                        |
-      | ""           | "something"     | "Epic sadface: Username is required"                                        |
-      | ""           | "secret_sauce"  | "Epic sadface: Username is required"                                        |
-      | "something"  | ""              | "Epic sadface: Password is required"                                        |
-      | " "          | "secret_sauce"  | "Epic sadface: Username and password do not match any user in this service" |
-      | "something"  | "somethings"    | "Epic sadface: Username and password do not match any user in this service" |
-      | "wrong_user" | "wrog_password" | "Epic sadface: Username and password do not match any user in this service" |
+      | username     | password        | message               |
+      | ""           | ""              | USERNAME_REQUIRED     |
+      | " "          | ""              | PASSWORD_REQUIRED     |
+      | ""           | "something"     | USERNAME_REQUIRED     |
+      | ""           | "secret_sauce"  | USERNAME_REQUIRED     |
+      | "something"  | ""              | PASSWORD_REQUIRED     |
+      | " "          | "secret_sauce"  | INVALID_CREDENTIALS   |
+      | "something"  | "somethings"    | INVALID_CREDENTIALS   |
+      | "wrong_user" | "wrong_password"| INVALID_CREDENTIALS   |
+
