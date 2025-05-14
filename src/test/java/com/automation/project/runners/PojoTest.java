@@ -15,6 +15,7 @@ import java.util.stream.IntStream;
 import static com.automation.project.context.Specifications.*;
 import static io.restassured.RestAssured.given;
 
+// the same here move to src/main
 @Slf4j
 @DisplayName("Api tests with Pojo classes")
 @Feature("Api Pojo")

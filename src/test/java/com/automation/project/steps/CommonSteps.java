@@ -16,5 +16,6 @@ public class CommonSteps {
     public void userNavigatesTo(String pageName) {
         navigationActions.navigateToPage(pageName);
         CustomAssert.assertThat("User is on " + pageName + " page", scenarioContext.getCurrentPage().getAnchorElement().isDisplayed(), is(true));
+        // add logger
     }
 }

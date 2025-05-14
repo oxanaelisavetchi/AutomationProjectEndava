@@ -2,42 +2,55 @@
 Feature: Rest Api Tests
 
   Background: Test Site Availability
+    # Background: Ensure API is available
     Given the API is reachable at base URL
+    # the API is accessible via the configured base URL
 
   @GetRequests
   Scenario Outline: Check GET API response
+    # Scenario Outline: Validate GET endpoint responses
     When run request "<path>"
+    # When a GET request is sent to the endpoint "<path>"
     And check get status code <status>, <message>
+    # And -> Then
+    # Then the response status code should be <status> with message "<message>"
     Then check get response <data>, <value>, <message>
+    #Then -> And
+    # And the response body should contain "<data>" with value "<value>" and message "<message>"
+    # Why did you check twice the message?
 
     Examples:
-      | path        | status | message            | data       | value |
-      | USERS_ID    | 200    | "Single user "     | "data.id"  | 2     |
-      | UNKNOWN_2   | 200    | "Single resource " | "data.id"  | 2     |
-      | USERS_PAGE  | 200    | "List user "       | "per_page" | 6     |
+      | path       | status | message            | data       | value |
+      | USERS_ID   | 200    | "Single user "     | "data.id"  | 2     |
+      | UNKNOWN_2  | 200    | "Single resource " | "data.id"  | 2     |
+      | USERS_PAGE | 200    | "List user "       | "per_page" | 6     |
 
   @PostRequests
+    # Rewrite in more business style the steps name
   Scenario Outline: Check the post rest api functionality
     When run request "<path>" with <data> and <value>
+    # the same, you twice check the message
     And check status code <status>, <message>
     Then check post response <message>, <response>
 
     Examples:
-      | path       | status | message                | data             | value                           | response            |
+    // split happy and negative tests
+      | path     | status | message                | data             | value                           | response            |
       | USERS    | 201    | "User created "        | "name,job"       | "morpheus,leader"               | ""                  |
       | REGISTER | 200    | "User registered "     | "email,password" | "eve.holt@reqres.in,pistol"     | "QpwL5tke4Pnpja7X4" |
       | REGISTER | 400    | "User not registered " | "email"          | "sydney@fife"                   | ""                  |
-      | LOGIN   | 200    | "User logged "         | "email,password" | "eve.holt@reqres.in,cityslicka" | "QpwL5tke4Pnpja7X4" |
-      | LOGIN  | 400    | "User not logged "     | "email"          | "eve.holt@reqres.in"            | ""                  |
+      | LOGIN    | 200    | "User logged "         | "email,password" | "eve.holt@reqres.in,cityslicka" | "QpwL5tke4Pnpja7X4" |
+      | LOGIN    | 400    | "User not logged "     | "email"          | "eve.holt@reqres.in"            | ""                  |
 
   @PutRequests
   Scenario Outline: Check the put rest api functionality
+    # MAybe create a generic step for run some requests?
     When run put request "<path>" with <data> and <value>
     And check status code <status>, <message>
     Then check response <message>
 
     Examples:
-      | path      | status | message         | data       | value                    |
+      | path     | status | message         | data       | value                    |
       | USERS_ID | 200    | "User updated " | "name,job" | "morpheus,zion resident" |
 
   @PatchRequests
@@ -47,7 +60,7 @@ Feature: Rest Api Tests
     Then check response <message>
 
     Examples:
-      | path      | status | message         | data       | value                    |
+      | path     | status | message         | data       | value                    |
       | USERS_ID | 200    | "User updated " | "name,job" | "morpheus,zion resident" |
 
   @DeleteRequests
@@ -56,7 +69,7 @@ Feature: Rest Api Tests
     And check status code <status>, <message>
 
     Examples:
-      | path      | status | message         |
+      | path     | status | message         |
       | USERS_ID | 204    | "User deleted " |
 
   @APITest

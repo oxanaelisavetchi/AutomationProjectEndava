@@ -17,6 +17,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+// these are unit tests move them to src/main
 public class NoPojoTest {
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
 

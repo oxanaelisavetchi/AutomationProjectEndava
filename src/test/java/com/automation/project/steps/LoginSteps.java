@@ -20,11 +20,13 @@ public class LoginSteps {
     public void userLogsWithCredentials(String userName, String password) throws Throwable {
         log.info("Trying to log in with username: '{}' and password: '{}'", userName, password);
         logInActions.logIn(userName, password);
+        // add log
     }
 
     @Then("user enters on product page")
     public void userEntersOnProductPage() {
         CustomAssert.assertThat("User in on Account page  ", scenarioContext.getCurrentPage().getAnchorElement().isDisplayed(), is(true));
+        // add log
     }
 
     @Then("user receives message {string}")

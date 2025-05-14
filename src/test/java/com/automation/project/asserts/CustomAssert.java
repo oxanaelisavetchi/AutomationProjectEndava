@@ -14,7 +14,8 @@ public class CustomAssert {
             MatcherAssert.assertThat(fullMessage, actual, matcher);
             log.info(logMessage);
         } catch (AssertionError error) {
-            log.info(logMessage);
+            // why info, if have an error?
+            log.error(logMessage);
             throw new AssertionError(error.getMessage());
         }
     }

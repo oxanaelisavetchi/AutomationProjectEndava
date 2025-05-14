@@ -25,9 +25,11 @@ import static org.hamcrest.Matchers.notNullValue;
 @Slf4j
 public class RestApiSteps {
 
+    // maybe create a POJO class Response a check it
     private Response response;
 
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
+    // private static final String BASEURL = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
 
     @Given("the API is reachable at base URL")
     public void apiIsReachableAtBaseUrl() {
@@ -42,13 +44,17 @@ public class RestApiSteps {
                 .statusCode();
 
         log.info("Status code received: {}", statusCode);
+        // log.info("Received HTTP status code [{}] while verifying API availability.", statusCode);
         CustomAssert.assertThat("API availability check", statusCode, is(200));
+        // CustomAssert.assertThat("Verifying that the API is operational and returns HTTP 200", statusCode, is(200));
     }
 
     @When("run request {string}")
-    public void runRequestUrl(String url) {
-        ApiPaths apiPath = ApiPaths.valueOf(url);
-        response = runGetRequest(apiPath.getPath());
+    public void runRequestUrl(ApiPaths apiPath) {
+        // valueOf not safety and uncomfortable
+        String path = apiPath.getPath();
+        response = runGetRequest(path);
+        // log more business and info
         log.info("Response: {}", response.asString());
     }
 
@@ -57,12 +63,15 @@ public class RestApiSteps {
     public void checkGetStatusCode(int resp, String message) {
         // get from scenario context
         checkResponse(message, response.statusCode(), resp);
+        // add log info
     }
 
     @Then("check get response {string}, {int}, {string}")
     public void checkGetResponse(String data, int value, String message) {
+        // rewrite the log message
         log.info("Validating JSON path '{}' equals value '{}'", data, value);
 
+        // No hardcode 200 -> use variable or Enum
         if (response.statusCode() == 200) {
             Object actualValue = response.getBody().jsonPath().get(data);
             log.info("Actual value for {}: {}", data, actualValue);
@@ -74,19 +83,32 @@ public class RestApiSteps {
     }
 
     @When("run request {string} with {string} and {string}")
+    // Use ApiPaths enum instead og String url
     public void runRequest(String url, String field, String value) {
+        // String apiPath = ApiPaths.valueOf(url).getPath();
         ApiPaths apiPath = ApiPaths.valueOf(url);
         response = runPostRequest(getJsonObject(field, value), apiPath.getPath());
+        // use scenario context to save response
+        // ScenarioContext.saveScenario("Response", response);
     }
 
 
     @And("check status code {int}, {string}")
     public void checkStatusCode(int statusCode, String message) {
+        // get response from ScenarioContext
+        // ScenarioContext.getScenario("Response");
+        // StatusCode actual = response.getStatusCode();
+        // assertThat(message, actual, equalsTo(statusCode)), assertEquals
         CustomAssert.assertThat(message, response.statusCode(), is(statusCode));
     }
 
     @Then("check post response {string}, {string}")
     public void checkPostResponse(String message, String expectedToken) throws Exception {
+        // get response from scenario context
+        // use enum with status codes, maybe exist in library og rest-assured
+        // response.statusCode() < 400 -> check this
+        // Response response = ScenarioContext.getScenario("Response");
+
         if (!expectedToken.isEmpty() && response.statusCode() < 400) {
             SuccessUserReg user = new ObjectMapper().readValue(response.asString(), SuccessUserReg.class);
             CustomAssert.assertThat(message, user.getToken(), is(expectedToken));
@@ -115,12 +137,14 @@ public class RestApiSteps {
     @When("run delete request {string}")
     public void deleteFunctionality(String path) {
         ApiPaths apiPath = ApiPaths.valueOf(path);
+        // move delete to ApiRequests
         response = given()
                 .baseUri(baseUrl)
                 .when()
                 .delete(collectUrl(apiPath.getPath()))
                 .then()
                 .extract().response();
+        // add log
     }
 
 

@@ -9,9 +9,11 @@ import com.automation.project.utilities.PageManager;
 
 public class NavigationActions extends DriverFactory {
 
+    // static???
     private final ScenarioContext scenarioContext = ScenarioContext.getInstance();
     private final String baseUrl = ConfigurationProperties.getConfigPropertyValue("base.url");
 
+    // move this to
     public void navigateToPage(String pageName) {
         BasePage page = PageManager.getPageByName(pageName);
         String fullUrl = baseUrl + page.getURL();
