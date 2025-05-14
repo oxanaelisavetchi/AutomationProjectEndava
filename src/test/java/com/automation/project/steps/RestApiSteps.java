@@ -1,136 +1,110 @@
+
 package com.automation.project.steps;
 
+import com.automation.project.actions.ApiRequests;
 import com.automation.project.asserts.CustomAssert;
 import com.automation.project.configuration.ConfigurationProperties;
 import com.automation.project.entity.SuccessUserReg;
 import com.automation.project.enums.ApiPaths;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import io.cucumber.java.en.*;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.Map;
 
-import static com.automation.project.actions.RestApiActions.*;
+import static com.automation.project.actions.ApiRequests.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @Slf4j
 public class RestApiSteps {
-
     private Response response;
+    private static final String BASE_URL = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
 
-    private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
-
-    @Given("the API is reachable at base URL")
-    public void apiIsReachableAtBaseUrl() {
-        log.info("Checking availability of base API URL: {}", baseUrl);
-
+    @Given("the API is accessible via the configured base URL")
+    public void theApiIsAccessibleViaTheConfiguredBaseUrl() {
+        log.info("Checking API accessibility at: {}", BASE_URL);
         int statusCode = given()
-                .baseUri(baseUrl)
+                .baseUri(BASE_URL)
                 .when()
                 .get()
                 .then()
                 .extract()
                 .statusCode();
-
-        log.info("Status code received: {}", statusCode);
-        CustomAssert.assertThat("API availability check", statusCode, is(200));
+        CustomAssert.assertThat("API should return HTTP 200", statusCode, is(200));
     }
 
-    @When("run request {string}")
-    public void runRequestUrl(String url) {
-        ApiPaths apiPath = ApiPaths.valueOf(url);
-        response = runGetRequest(apiPath.getPath());
-        log.info("Response: {}", response.asString());
+    @When("a GET request is sent to the endpoint {string}")
+    public void aGetRequestIsSentToTheEndpoint(String urlKey) {
+        ApiPaths apiPath = ApiPaths.valueOf(urlKey);
+        response = sendGetRequest(apiPath.getPath());
+        log.info("GET response from [{}]: {}", apiPath.getPath(), response.statusCode());
     }
 
-
-    @And("check get status code {int}, {string}")
-    public void checkGetStatusCode(int resp, String message) {
-        // get from scenario context
-        checkResponse(message, response.statusCode(), resp);
+    @Then("the response should contain {string} with value {int}")
+    public void validateResponseField(String field, int expectedValue) {
+        Object actualValue = response.getBody().jsonPath().get(field);
+        CustomAssert.assertThat("Validating response field", actualValue, is(expectedValue));
     }
 
-    @Then("check get response {string}, {int}, {string}")
-    public void checkGetResponse(String data, int value, String message) {
-        log.info("Validating JSON path '{}' equals value '{}'", data, value);
-
-        if (response.statusCode() == 200) {
-            Object actualValue = response.getBody().jsonPath().get(data);
-            log.info("Actual value for {}: {}", data, actualValue);
-
-            CustomAssert.assertThat(message, actualValue, is(value));
-        } else {
-            log.warn("Skipping response value check — status: {}", response.statusCode());
-        }
+    @When("a POST request is sent to the endpoint {string} with data {string} and value {string}")
+    public void sendPostRequest(String urlKey, String field, String value) {
+        ApiPaths apiPath = ApiPaths.valueOf(urlKey);
+        response = ApiRequests.sendPostRequest(getJsonObject(field, value), apiPath.getPath());
     }
-
-    @When("run request {string} with {string} and {string}")
-    public void runRequest(String url, String field, String value) {
-        ApiPaths apiPath = ApiPaths.valueOf(url);
-        response = runPostRequest(getJsonObject(field, value), apiPath.getPath());
-    }
-
-
-    @And("check status code {int}, {string}")
-    public void checkStatusCode(int statusCode, String message) {
+    @Then("the response of POST status code should be {int} with message {string}")
+    public void theResponseOfPostStatusCodeShouldBeWithMessage(Integer statusCode, String message) {
         CustomAssert.assertThat(message, response.statusCode(), is(statusCode));
     }
 
-    @Then("check post response {string}, {string}")
-    public void checkPostResponse(String message, String expectedToken) throws Exception {
+    @Then("the response should contain token {string}")
+    public void validateTokenInResponse(String expectedToken) throws Exception {
         if (!expectedToken.isEmpty() && response.statusCode() < 400) {
             SuccessUserReg user = new ObjectMapper().readValue(response.asString(), SuccessUserReg.class);
-            CustomAssert.assertThat(message, user.getToken(), is(expectedToken));
+            CustomAssert.assertThat("Validating token", user.getToken(), is(expectedToken));
         }
     }
 
-    @When("run put request {string} with {string} and {string}")
-    public void runPutRequests(String url, String field, String value) {
-        ApiPaths apiPath = ApiPaths.valueOf(url);
-        response = runPutRequest(getJsonObject(field, value), apiPath.getPath());
+    @When("the PUT request is sent {string} with data {string} and value {string}")
+    public void sendPutRequest(String urlKey, String field, String value) {
+        response = ApiRequests.sendPutRequest(getJsonObject(field, value), ApiPaths.valueOf(urlKey).getPath());
+    }
+
+    @Then("the response status code should be {int}, with message {string}")
+    public void validateStatusCode(int expectedCode, String message) {
+        int actualStatusCode = response.statusCode();
+        log.info("Expected status: {}, Actual status: {}, Message: {}", expectedCode, actualStatusCode, message);
+
+        CustomAssert.assertThat(message, actualStatusCode, is(expectedCode));
     }
 
 
-    @Then("check response {string}")
-    public void checkResponses(String message) {
-        CustomAssert.assertThat(message, response.getBody().jsonPath().get("updatedAt"), notNullValue());
+
+    @When("the PATCH request is sent to {string} with data {string} and value {string}")
+    public void sendPatchRequest(String urlKey, String field, String value) {
+        response = ApiRequests.sendPatchRequest(getJsonObject(field, value), ApiPaths.valueOf(urlKey).getPath());
     }
 
-    @When("run patch request {string} with {string} and {string}")
-    public void runPatchRequestUrlWithDataAndValue(String url, String field, String value) {
-        ApiPaths apiPath = ApiPaths.valueOf(url);
-        response = runPatchRequest(getJsonObject(field, value), apiPath.getPath());
+    @Then("the response should contain field {string}")
+    public void validateResponseFieldPresence(String field) {
+        Object value = response.getBody().jsonPath().get(field);
+        CustomAssert.assertThat("Response should contain field", value, notNullValue());
     }
 
-
-    @When("run delete request {string}")
-    public void deleteFunctionality(String path) {
-        ApiPaths apiPath = ApiPaths.valueOf(path);
-        response = given()
-                .baseUri(baseUrl)
-                .when()
-                .delete(collectUrl(apiPath.getPath()))
-                .then()
-                .extract().response();
+    @When("I delete a user at {string}")
+    public void sendDeleteRequest(String urlKey) {
+        response = ApiRequests.sendDeleteRequest(ApiPaths.valueOf(urlKey).getPath());
     }
-
 
     @When("I create a user with the following details:")
     public void createUserWithDataTable(DataTable table) {
         Map<String, String> userData = table.asMap(String.class, String.class);
-        log.info("Trimitem acest JSON: {}", userData);
-
         response = given()
-                .baseUri(baseUrl)
+                .baseUri(BASE_URL)
                 .contentType("application/json")
                 .body(userData)
                 .when()
@@ -140,16 +114,18 @@ public class RestApiSteps {
     }
 
     @Then("the response should contain token")
-    public void responseShouldContainToken() {
-        System.out.println("Response: " + response.asString());
-
+    public void validateTokenExists() {
         String error = response.jsonPath().get("error");
         if (error != null) {
-            Assertions.fail("Request failed: " + error);
+            Assertions.fail("API returned error: " + error);
         }
-
         String token = response.jsonPath().get("token");
         Assertions.assertNotNull(token, "Token is null – user may not be registered.");
+    }
+    @When("a POST request is sent to the endpoint {string} with data {string} and value {string}")
+    public void sendPostRequestMatchingFeature(String urlKey, String field, String value) {
+        ApiPaths apiPath = ApiPaths.valueOf(urlKey);
+        response = ApiRequests.sendPostRequest(getJsonObject(field, value), apiPath.getPath());
     }
 
 

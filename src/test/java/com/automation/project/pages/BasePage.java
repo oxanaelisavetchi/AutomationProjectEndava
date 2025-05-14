@@ -6,8 +6,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+
 @Getter
 public abstract class BasePage {
+    // Read about N-Layer architecture
 
     public BasePage(WebDriver driver) {
         PageFactory.initElements(driver, this);

@@ -6,6 +6,7 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
+// move to src/main
 public class Specifications {
 
     public static RequestSpecification requestSpec(String url) {

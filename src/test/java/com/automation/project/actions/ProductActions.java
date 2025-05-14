@@ -50,7 +50,10 @@ public class ProductActions {
     }
 
     public List<Product> getASCProductsByName(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getName)).toList();
+        return products
+                .stream()
+                .sorted(Comparator.comparing(Product::getName))
+                .toList();
     }
 
     public List<Product> getDESCProductsByName(List<Product> products) {
