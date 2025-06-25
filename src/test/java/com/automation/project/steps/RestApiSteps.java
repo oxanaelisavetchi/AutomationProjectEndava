@@ -5,7 +5,6 @@ import com.automation.project.configuration.ConfigurationProperties;
 import com.automation.project.entity.SuccessUserReg;
 import com.automation.project.enums.ApiPaths;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

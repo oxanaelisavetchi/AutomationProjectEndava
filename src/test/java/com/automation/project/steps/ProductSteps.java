@@ -2,7 +2,6 @@ package com.automation.project.steps;
 
 import com.automation.project.actions.ProductActions;
 import com.automation.project.entity.Product;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import org.junit.jupiter.api.Assertions;
 
