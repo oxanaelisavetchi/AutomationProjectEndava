@@ -19,12 +19,15 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class NoPojoTest {
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
+    public static final String API_KEY = "x-api-key";
+    public static final String API_KEY_VALUE = "reqres-free-v1";
 
     @Test
     @DisplayName("Avatars contains user id")
     public void checkAvatarsNoPojoTest() {
         installSpecification(requestSpec(baseUrl), responseSpecOK200());
         Response response = given()
+                .body("").header(API_KEY, API_KEY_VALUE)
                 .when()
                 .get("api/users?page=2")
                 .then().log().all()
@@ -53,7 +56,7 @@ public class NoPojoTest {
         user.put("email", "eve.holt@reqres.in");
         user.put("password", "pistol");
         Response response = given()
-                .body(user)
+                .body(user).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("api/register")
                 .then()
@@ -72,7 +75,7 @@ public class NoPojoTest {
         Map<String, String> user = new HashMap<>();
         user.put("email", "sydney@fife");
         Response response = given()
-                .body(user)
+                .body(user).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("api/register")
                 .then()

@@ -27,6 +27,8 @@ public class RestApiSteps {
     private Response response;
 
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
+    public static final String API_KEY = "x-api-key";
+    public static final String API_KEY_VALUE = "reqres-free-v1";
 
     @Given("the API is reachable at base URL")
     public void apiIsReachableAtBaseUrl() {
@@ -115,6 +117,7 @@ public class RestApiSteps {
     public void deleteFunctionality(String path) {
         ApiPaths apiPath = ApiPaths.valueOf(path);
         response = given()
+                .body("").header(API_KEY, API_KEY_VALUE)
                 .baseUri(baseUrl)
                 .when()
                 .delete(collectUrl(apiPath.getPath()))
@@ -131,7 +134,7 @@ public class RestApiSteps {
         response = given()
                 .baseUri(baseUrl)
                 .contentType("application/json")
-                .body(userData)
+                .body(userData).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("api/register")
                 .then()

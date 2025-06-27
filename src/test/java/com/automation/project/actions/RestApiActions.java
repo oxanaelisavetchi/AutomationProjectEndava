@@ -11,10 +11,13 @@ import static org.hamcrest.Matchers.is;
 public class RestApiActions {
 
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
+    public static final String API_KEY = "x-api-key";
+    public static final String API_KEY_VALUE = "reqres-free-v1";
 
     public static Response runGetRequest(String path) {
         return given()
                 .baseUri(baseUrl)
+                .body("").header(API_KEY, API_KEY_VALUE)
                 .when()
                 .get(collectUrl(path))
                 .then()
@@ -25,7 +28,7 @@ public class RestApiActions {
         return given()
                 .baseUri(baseUrl)
                 .contentType("application/json")
-                .body(data.toString())
+                .body(data.toString()).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post(collectUrl(path))
                 .then()
@@ -37,7 +40,7 @@ public class RestApiActions {
         return given()
                 .baseUri(baseUrl)
                 .contentType("application/json")
-                .body(data.toString())
+                .body(data.toString()).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .put(collectUrl(path))
                 .then()
@@ -49,7 +52,7 @@ public class RestApiActions {
         return given()
                 .baseUri(baseUrl)
                 .contentType("application/json")
-                .body(data.toString())
+                .body(data.toString()).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .patch(collectUrl(path))
                 .then()

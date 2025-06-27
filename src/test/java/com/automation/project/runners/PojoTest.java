@@ -21,6 +21,8 @@ import static io.restassured.RestAssured.given;
 public class PojoTest {
 
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
+    public static final String API_KEY = "x-api-key";
+    public static final String API_KEY_VALUE = "reqres-free-v1";
 
     @Test
     @DisplayName("Avatars contains user id")
@@ -52,10 +54,11 @@ public class PojoTest {
     public void successUserRegTest() {
         Integer userId = 4;
         String userPassword = "QpwL5tke4Pnpja7X4";
+
         installSpecification(requestSpec(baseUrl), responseSpecOK200());
         Register user = new Register("eve.holt@reqres.in", "pistol");
         SuccessUserReg successUserReg = given()
-                .body(user)
+                .body(user).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("api/register")
                 .then()
@@ -72,7 +75,7 @@ public class PojoTest {
         installSpecification(requestSpec(baseUrl), responseSpecError400());
         Register peopleSecond = new Register("sydney@fife", "");
         UnsuccessUserReg unSuccessUserReg = given()
-                .body(peopleSecond)
+                .body(peopleSecond).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("/api/register")
                 .then()
@@ -86,6 +89,7 @@ public class PojoTest {
     public void checkSortedYearsTest() {
         installSpecification(requestSpec(baseUrl), responseSpecOK200());
         List<Data> data = given()
+                .body("").header(API_KEY, API_KEY_VALUE)
                 .when()
                 .get("/api/unknown")
                 .then()
@@ -103,7 +107,7 @@ public class PojoTest {
     @DisplayName("Delete user")
     public void deleteUserTest() {
         installSpecification(requestSpec(baseUrl), responseSpec(204));
-        given().when().delete("/api/users/2").then();
+        given().body("").header(API_KEY, API_KEY_VALUE).when().delete("/api/users/2").then();
     }
 
 }
