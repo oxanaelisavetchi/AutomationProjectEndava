@@ -1,8 +1,11 @@
-package com.automation.project.runners;
+package unitTests;
 
 import com.automation.project.configuration.ConfigurationProperties;
+import com.automation.project.context.Specifications;
+import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,11 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static com.automation.project.context.Specifications.*;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+// these are unit tests move them to src/main
 public class NoPojoTest {
     private static final String baseUrl = ConfigurationProperties.getConfigPropertyValue("rest.api.url");
     public static final String API_KEY = "x-api-key";
@@ -25,18 +27,18 @@ public class NoPojoTest {
     @Test
     @DisplayName("Avatars contains user id")
     public void checkAvatarsNoPojoTest() {
-        installSpecification(requestSpec(baseUrl), responseSpecOK200());
-        Response response = given()
+        Specifications.installSpecification(Specifications.requestSpec(baseUrl), Specifications.responseSpecOK200());
+        Response response = RestAssured.given()
                 .body("").header(API_KEY, API_KEY_VALUE)
                 .when()
                 .get("api/users?page=2")
                 .then().log().all()
-                .body("page", equalTo(2))
-                .body("data.id", notNullValue())
-                .body("data.email", notNullValue())
-                .body("data.first_name", notNullValue())
-                .body("data.last_name", notNullValue())
-                .body("data.avatar", notNullValue())
+                .body("page", Matchers.equalTo(2))
+                .body("data.id", Matchers.notNullValue())
+                .body("data.email", Matchers.notNullValue())
+                .body("data.first_name", Matchers.notNullValue())
+                .body("data.last_name", Matchers.notNullValue())
+                .body("data.avatar", Matchers.notNullValue())
                 .extract().response();
         JsonPath jsonPath = response.jsonPath();
         List<String> emails = jsonPath.get("data.email");
@@ -51,11 +53,11 @@ public class NoPojoTest {
     @Test
     @DisplayName("Successful registration")
     public void successUserTestNoPojo() {
-        installSpecification(requestSpec(baseUrl), responseSpecOK200());
+        Specifications.installSpecification(Specifications.requestSpec(baseUrl), Specifications.responseSpecOK200());
         Map<String, String> user = new HashMap<>();
         user.put("email", "eve.holt@reqres.in");
         user.put("password", "pistol");
-        Response response = given()
+        Response response = RestAssured.given()
                 .body(user).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("api/register")
@@ -71,10 +73,10 @@ public class NoPojoTest {
     @Test
     @DisplayName("Unsuccessful registration")
     public void unsuccessfulUserNoPojo() {
-        installSpecification(requestSpec(baseUrl), responseSpecError400());
+        Specifications.installSpecification(Specifications.requestSpec(baseUrl), Specifications.responseSpecError400());
         Map<String, String> user = new HashMap<>();
         user.put("email", "sydney@fife");
-        Response response = given()
+        Response response = RestAssured.given()
                 .body(user).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("api/register")

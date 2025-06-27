@@ -1,11 +1,13 @@
 package com.automation.project.context;
 
-import com.automation.project.pages.BasePage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScenarioContext {
 
     private static ScenarioContext INSTANCE;
-    private BasePage currentPage;
+
+    private final Map<String, Object> data = new HashMap<>();
 
     private ScenarioContext() {
     }
@@ -18,15 +20,22 @@ public class ScenarioContext {
     }
 
     public static void closeScenario() {
-        INSTANCE = null;
+        if (INSTANCE != null) {
+            INSTANCE.data.clear();  // clear saved values
+            INSTANCE = null;
+        }
     }
 
-    public BasePage getCurrentPage() {
-        return currentPage;
+    public void saveData(String key, Object value) {
+        data.put(key, value);
     }
 
-    public void setCurrentPage(BasePage currentPage) {
-        this.currentPage = currentPage;
+    @SuppressWarnings("unchecked")
+    public <T> T getData(String key) {
+        return (T) data.get(key);
     }
 
+    public void clearData() {
+        data.clear();
+    }
 }

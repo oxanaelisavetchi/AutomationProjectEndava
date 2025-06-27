@@ -24,6 +24,7 @@ public enum ApiPaths {
     private final String path;
 
     ApiPaths(String path) {
+
         this.path = path;
     }
 

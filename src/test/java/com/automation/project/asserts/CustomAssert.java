@@ -12,9 +12,9 @@ public class CustomAssert {
         String logMessage = getActualExpectedMessage(fullMessage, String.valueOf(actual), String.valueOf(matcher));
         try {
             MatcherAssert.assertThat(fullMessage, actual, matcher);
-            log.info(logMessage);
+            log.info("[PASS] {}",logMessage);
         } catch (AssertionError error) {
-            log.info(logMessage);
+            log.error("[FAIL] {}",logMessage);
             throw new AssertionError(error.getMessage());
         }
     }

@@ -1,8 +1,10 @@
-package com.automation.project.runners;
+package unitTests;
 
 import com.automation.project.configuration.ConfigurationProperties;
+import com.automation.project.context.Specifications;
 import com.automation.project.entity.*;
 import io.qameta.allure.Feature;
+import io.restassured.RestAssured;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -12,9 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.automation.project.context.Specifications.*;
 import static io.restassured.RestAssured.given;
 
+// the same here move to src/main
 @Slf4j
 @DisplayName("Api tests with Pojo classes")
 @Feature("Api Pojo")
@@ -27,9 +29,9 @@ public class PojoTest {
     @Test
     @DisplayName("Avatars contains user id")
     public void checkAvatarContainsIdTest() {
-        installSpecification(requestSpec(baseUrl), responseSpecOK200());
+        Specifications.installSpecification(Specifications.requestSpec(baseUrl), Specifications.responseSpecOK200());
 
-        List<UserData> users = given()
+        List<UserData> users = RestAssured.given()
                 .when()
                 .get("api/users?page=2")
                 .then()
@@ -54,10 +56,9 @@ public class PojoTest {
     public void successUserRegTest() {
         Integer userId = 4;
         String userPassword = "QpwL5tke4Pnpja7X4";
-
-        installSpecification(requestSpec(baseUrl), responseSpecOK200());
+        Specifications.installSpecification(Specifications.requestSpec(baseUrl), Specifications.responseSpecOK200());
         Register user = new Register("eve.holt@reqres.in", "pistol");
-        SuccessUserReg successUserReg = given()
+        SuccessUserReg successUserReg = RestAssured.given()
                 .body(user).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("api/register")
@@ -72,9 +73,9 @@ public class PojoTest {
     @Test
     @DisplayName("Unsuccessful registration")
     public void unSuccessUserRegTest() {
-        installSpecification(requestSpec(baseUrl), responseSpecError400());
+        Specifications.installSpecification(Specifications.requestSpec(baseUrl), Specifications.responseSpecError400());
         Register peopleSecond = new Register("sydney@fife", "");
-        UnsuccessUserReg unSuccessUserReg = given()
+        UnsuccessUserReg unSuccessUserReg = RestAssured.given()
                 .body(peopleSecond).header(API_KEY, API_KEY_VALUE)
                 .when()
                 .post("/api/register")
@@ -87,8 +88,8 @@ public class PojoTest {
     @Test
     @DisplayName("Check years order")
     public void checkSortedYearsTest() {
-        installSpecification(requestSpec(baseUrl), responseSpecOK200());
-        List<Data> data = given()
+        Specifications.installSpecification(Specifications.requestSpec(baseUrl), Specifications.responseSpecOK200());
+        List<Data> data = RestAssured.given()
                 .body("").header(API_KEY, API_KEY_VALUE)
                 .when()
                 .get("/api/unknown")
@@ -106,8 +107,8 @@ public class PojoTest {
     @Test
     @DisplayName("Delete user")
     public void deleteUserTest() {
-        installSpecification(requestSpec(baseUrl), responseSpec(204));
-        given().body("").header(API_KEY, API_KEY_VALUE).when().delete("/api/users/2").then();
+        Specifications.installSpecification(Specifications.requestSpec(baseUrl), Specifications.responseSpec(204));
+        RestAssured.given().body("").header(API_KEY, API_KEY_VALUE).when().delete("/api/users/2").then();
     }
 
 }
