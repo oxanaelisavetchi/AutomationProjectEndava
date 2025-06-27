@@ -1,6 +1,7 @@
 package com.automation.project.actions;
 
 import com.automation.project.configuration.ConfigurationProperties;
+import com.automation.project.context.ScenarioContext;
 import com.automation.project.drivers.DriverFactory;
 import com.automation.project.pages.BasePage;
 import com.automation.project.utilities.PageManager;

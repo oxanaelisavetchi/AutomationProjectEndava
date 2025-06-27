@@ -2,6 +2,7 @@ package com.automation.project.steps;
 
 import com.automation.project.actions.NavigationActions;
 import com.automation.project.asserts.CustomAssert;
+import com.automation.project.context.ScenarioContext;
 import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 

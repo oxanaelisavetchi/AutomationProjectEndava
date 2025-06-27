@@ -1,11 +1,19 @@
 package com.automation.project.context;
 
+import com.automation.project.pages.BasePage;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScenarioContext {
 
     private static ScenarioContext INSTANCE;
+
+    @Setter
+    @Getter
+    private static BasePage currentPage;
 
     private final Map<String, Object> data = new HashMap<>();
 

@@ -55,7 +55,7 @@ public class Hooks {
     @After
     public void closeSession() {
         DriverFactory.quitDriver();
-        UiScenarioContext.setCurrentPage(null);
+        ScenarioContext.setCurrentPage(null);
         ScenarioContext.closeScenario();
     }
 

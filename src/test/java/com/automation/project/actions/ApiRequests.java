@@ -1,14 +1,12 @@
 
 package com.automation.project.actions;
 
-import com.automation.project.asserts.CustomAssert;
 import com.automation.project.configuration.ConfigurationProperties;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
 
 public class ApiRequests {
 
@@ -37,8 +35,8 @@ public class ApiRequests {
 
     public static JSONObject getJsonObject(String field, String value) {
         JSONObject data = new JSONObject();
-        String[] fields = field.split(",");
-        String[] values = value.split(",");
+        String[] fields = ",".split(field);
+        String[] values = ",".split(value);
         for (int i = 0; i < fields.length; i++) {
             data.put(fields[i], values[i]);
         }

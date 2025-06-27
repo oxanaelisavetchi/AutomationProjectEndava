@@ -1,6 +1,7 @@
 package com.automation.project.actions;
 
 import com.automation.project.asserts.CustomAssert;
+import com.automation.project.context.ScenarioContext;
 import com.automation.project.drivers.DriverFactory;
 import com.automation.project.pages.LoginPage;
 import com.automation.project.pages.ProductsPage;

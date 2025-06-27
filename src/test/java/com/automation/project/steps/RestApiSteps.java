@@ -125,6 +125,7 @@ public class RestApiSteps {
         String token = response.jsonPath().get("token");
         Assertions.assertNotNull(token, "Token is null – user may not be registered.");
     }
+
     @When("a POST request is sent to the endpoint {string} with data {string} and value {string}")
     public void sendPostRequestMatchingFeature(String urlKey, String field, String value) {
         ApiPaths apiPath = ApiPaths.valueOf(urlKey);
